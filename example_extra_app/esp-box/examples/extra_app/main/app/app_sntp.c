@@ -27,8 +27,9 @@ void time_sync_notification_cb(struct timeval *tv)
     ESP_LOGI(TAG, "Notification of a time synchronization event");
 }
 
-void sntp_task(void *para)
-{
+static void sntp_task(void)//void *para)
+{    
+    //xSemaphoreTake( app_network_xSemaphore, portMAX_DELAY );
     //ESP_ERROR_CHECK(example_connect());
     ESP_LOGI(TAG, "Initializing SNTP");
     sntp_setoperatingmode(SNTP_OPMODE_POLL);
@@ -57,11 +58,26 @@ void sntp_task(void *para)
     localtime_r(&now, &timeinfo);
     strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
     ESP_LOGI(TAG, "The current date/time in Shanghai is: %s", strftime_buf);
-    vTaskDelete(NULL);
+    //vTaskDelete(NULL);
 }
-void start_sntp(void)
+esp_err_t start_sntp(void)
 {
-    //audio_thread_create(NULL, "sntp_task", sntp_task, NULL, 3 * 1024, 5, true, 0);
-    xTaskCreate(sntp_task, "sntp_task", 3 * 1024, NULL, 5, NULL);
+    sntp_task();
+    //xTaskCreate(sntp_task, "sntp_task", 3 * 1024, NULL, 5, NULL);
+    /*
+    BaseType_t ret_val = xTaskCreatePinnedToCore(
+        (TaskFunction_t)        sntp_task,
+        (const char * const)    "sntp task",
+        (const uint32_t)        3 * 1024,
+        (void * const)          NULL,
+        (UBaseType_t)           1,
+        (TaskHandle_t * const)  NULL,
+        (const BaseType_t)      1);
+    if (pdPASS != ret_val) {
+        ESP_LOGE(TAG, "Failed create sntp task to core 0");
+        return ESP_FAIL;
+    }*/
+
+    return ESP_OK;
 }
 

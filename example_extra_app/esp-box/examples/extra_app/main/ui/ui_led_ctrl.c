@@ -48,7 +48,7 @@ static void color_sel_cb(lv_event_t *event)
 
     lv_color_t color = lv_colorwheel_get_rgb(color_sel);
 
-    app_pwm_led_set_all(color.ch.red << 3, (color.ch.green_h << 5) + (color.ch.green_l << 2), color.ch.blue << 3);
+    app_led_set_all(color.ch.red << 3, (color.ch.green_h << 5) + (color.ch.green_l << 2), color.ch.blue << 3);
 }
 
 void ui_led(bool show)

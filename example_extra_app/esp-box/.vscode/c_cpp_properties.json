@@ -4,7 +4,6 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/myWorkspace/myProgram/box_demo_vedio/example_extra_app/**",
                 "~/esp/esp-idf/**"
             ],
             "defines": [

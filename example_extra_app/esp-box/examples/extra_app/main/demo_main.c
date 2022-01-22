@@ -21,7 +21,6 @@
 
 #include <stdbool.h>
 #include "app_audio.h"
-#include "app_sntp.h"
 #include "app_led.h"
 #include "app_network.h"
 #include "app_sr.h"
@@ -42,14 +41,6 @@
 
 void app_main(void)
 {
-    // Initialize NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK( nvs_flash_erase() );
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
-
     ESP_ERROR_CHECK(bsp_board_init());
     ESP_ERROR_CHECK(bsp_board_power_ctrl(POWER_MODULE_AUDIO, true));
     ESP_ERROR_CHECK(bsp_spiffs_init("model", "/srmodel", 4));
@@ -60,12 +51,7 @@ void app_main(void)
     ESP_ERROR_CHECK(bsp_tp_init());
     ESP_ERROR_CHECK(lv_port_init());
 
-    //ESP_ERROR_CHECK(app_network_start("ESP-Box"));
-    network_task("ESP-Box");
-
-    /* syn the real time and date */
-    start_sntp();
-    //ESP_ERROR_CHECK(esp_wifi_stop());
+    ESP_ERROR_CHECK(app_network_start("ESP-Box"));
 
     ESP_ERROR_CHECK(ui_main_start());
     lv_task_handler();

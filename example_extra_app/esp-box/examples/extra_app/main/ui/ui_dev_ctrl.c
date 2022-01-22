@@ -80,7 +80,7 @@ static void btn_dev_cb(lv_event_t *event)
         if (btn == obj_dev[0]) {
             if (btn->state & LV_STATE_CHECKED) {
                 lv_obj_set_style_text_color(lab, lv_color_black(), LV_STATE_DEFAULT);
-                ESP_ERROR_CHECK(app_led_set_all(led_state.h, led_state.s, led_state.v));
+                ESP_ERROR_CHECK(app_led_set_all(0, 197, 205));
                 //app_pwm_led_set_all_hsv(led_state.h, led_state.s, led_state.v);
             } else {
                 //app_pwm_led_set_all_hsv(0, 0, 0);

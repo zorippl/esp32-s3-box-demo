@@ -41,7 +41,7 @@ extern "C" {
  *    - Others: Fail
  */
 esp_err_t app_network_start(const char *host_name);
-void network_task(char *host_name);
+//void network_task(char *host_name);
 
 #ifdef __cplusplus
 }

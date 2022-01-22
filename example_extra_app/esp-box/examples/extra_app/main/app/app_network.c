@@ -23,6 +23,7 @@
 #include <string.h>
 #include "app_server.h"
 #include "app_network.h"
+#include "app_sntp.h"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_spiffs.h"
@@ -40,6 +41,8 @@ static const char *TAG = "app_network";
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group = NULL;
 const int WIFI_CONNECTED_BIT = BIT0;
+
+extern SemaphoreHandle_t app_network_xSemaphore = NULL; 
 
 static void initialise_mdns(const char *file_name)
 {
@@ -189,9 +192,9 @@ esp_err_t app_wifi_sta_connected(uint32_t wait_ms)
     return ESP_OK;
 }
 
-void network_task(char *host_name)
+static void network_task(void *pvParam)
 {
-    //char *host_name = (char *) pvParam;
+    char *host_name = (char *) pvParam;
 
     ESP_ERROR_CHECK(nvs_flash_init());
 
@@ -203,8 +206,11 @@ void network_task(char *host_name)
     netbiosns_set_name(host_name);
     /* Create STA netif */
     esp_netif_t *sta_wifi_netif = app_wifi_init(WIFI_MODE_STA);
-    app_wifi_set(WIFI_MODE_STA, "TP-LINK-2.4-zori", "a18281132");
+    app_wifi_set(WIFI_MODE_STA, CONFIG_EXAMPLE_WIFI_SSID, CONFIG_EXAMPLE_WIFI_PASSWORD);
     app_wifi_sta_connected(portMAX_DELAY);
+    start_sntp();
+
+    
     /* Start soft-AP */
     start_soft_ap();
 
@@ -213,11 +219,12 @@ void network_task(char *host_name)
 
     start_rest_server("/spiffs/web");
 
-    //vTaskDelete(NULL);
+    vTaskDelete(NULL);
 }
 
 esp_err_t app_network_start(const char *host_name)
 {
+    //xSemaphoreGive( app_network_xSemaphore );
     BaseType_t ret_val = xTaskCreatePinnedToCore(
         (TaskFunction_t)        network_task,
         (const char * const)    "Network Task",
@@ -225,12 +232,11 @@ esp_err_t app_network_start(const char *host_name)
         (void * const)          host_name,
         (UBaseType_t)           5,
         (TaskHandle_t * const)  NULL,
-        (const BaseType_t)      0);
+        (const BaseType_t)      1);
     if (pdPASS != ret_val) {
         ESP_LOGE(TAG, "Failed create Network task");
         return ESP_FAIL;
     }
-
 
     return ESP_OK;
 }

@@ -33,9 +33,8 @@ static lv_obj_t *lab_net_state = NULL;
 static lv_obj_t *label_title = NULL;
 
 static const char *wifi_info = "WIFI:T:WPA;S:" CONFIG_AP_SSID ";P:" CONFIG_AP_PASSWORD ";";
-//static const char *wifi_info = "http://192.168.1.107/";
 
-static const char *web_page = "http://192.168.4.1/";
+static const char *web_page = "http://192.168.1.107/";
 static const char *dev_dis_msg = "1. AP: \"" CONFIG_AP_SSID "\", PWD: \"" "*****" "\"";
 static const char *dev_con_msg = "2. Visit web \"http://192.168.4.1\"\n" "  and wait for around 1 minute";
 static const char *ui_title_default = "Scan the QRcode to connect";
@@ -165,7 +164,7 @@ void ui_network_set_state(bool connect)
         //qr_data = (char *) web_page;
         //net_msg = (char *) dev_con_msg;
     } else {
-
+        
         //qr_data = (char *) wifi_info;
         //net_msg = (char *) dev_dis_msg;
     }

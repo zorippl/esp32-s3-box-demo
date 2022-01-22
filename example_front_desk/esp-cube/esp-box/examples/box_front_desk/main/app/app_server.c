@@ -31,25 +31,16 @@
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_vfs.h"
-#include "cJSON.h"
 #include "ui_lang.h"
 #include "jsmn.h"
 #include "json_parser.h"
 
-#include <string.h>
-#include <fcntl.h>
-#include "esp_http_server.h"
 #include "esp_netif.h"
-#include "esp_system.h"
-#include "esp_log.h"
-#include "esp_vfs.h"
-#include "cJSON.h"
 
-#include "esp_console.h"
 #include "esp_console.h"
 #include "dnserver.h"
 
-static const char *TAG = "esp-rest";
+static const char *TAG = "esp-server";
 #define DNS_SERVER_PORT 80
 
 static const ip_addr_t ipaddr = IPADDR4_INIT_BYTES(192, 168, 4, 1);
@@ -99,6 +90,7 @@ static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepa
 static esp_err_t rest_common_get_handler(httpd_req_t *req)
 {
     ESP_LOGW(TAG, "%s", __func__);
+
     ESP_LOGI(TAG, "%s", req->uri);
     char filepath[128];
     rest_server_context_t *rest_context = (rest_server_context_t *)req->user_ctx;
@@ -150,204 +142,6 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
 }
 
 
-static esp_err_t guest_post_handler(httpd_req_t *req)
-{
-    #if 0
-    char buf[256] = {0};
-
-    int len_ret, remaining = req->content_len;
-
-
-    if (remaining > sizeof(buf)) {
-
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "string too long");
-
-        return ESP_FAIL;
-
-    }
-
-
-    while (remaining > 0) {
-
-        /* Read the data for the request */
-
-        if ((len_ret = httpd_req_recv(req, buf,
-
-                                      MIN(remaining, sizeof(buf)))) <= 0) {
-
-            if (len_ret == HTTPD_SOCK_ERR_TIMEOUT) {
-
-                /* Retry receiving if timeout occurred */
-
-                continue;
-
-            }
-
-
-            return ESP_FAIL;
-
-        }
-
-
-        remaining -= len_ret;
-
-
-        /* Log data received */
-
-        ESP_LOGI(TAG, "=========== RECEIVED DATA ==========");
-
-        ESP_LOGI(TAG, "%.*s", len_ret, buf);
-
-        ESP_LOGI(TAG, "====================================");
-
-    }
-
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "*");
-
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "*");
-
-    jparse_ctx_t jctx;
-
-    int ps_ret = json_parse_start(&jctx, buf, strlen(buf));
-
-
-    if (ps_ret != OS_SUCCESS) {
-
-        printf("Parser failed\n");
-
-        return ESP_FAIL;
-
-    }
-
-
-    char str_val[64];
-
-
-    if (json_obj_get_string(&jctx, "q1", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_ssid, sizeof(user_ssid), "%.*s", sizeof(user_ssid) - 1, str_val);
-        printf("ssid %s\n", user_ssid);
-    } else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q2", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_hide_ssid, sizeof(user_hide_ssid), "%.*s", sizeof(user_hide_ssid) - 1, str_val);
-        printf("if_hide_ssid %s\n", user_hide_ssid);
-    } else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q3", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_auth_mode, sizeof(user_auth_mode), "%.*s", sizeof(user_auth_mode) - 1, str_val);
-        printf("auth_mode %s\n", user_auth_mode);
-    } else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q4", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_int(&jctx, "q5", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q5_value", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_int(&jctx, "q6", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q6_value", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q7", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q7_2", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-
-
-    if (json_obj_get_string(&jctx, "q8", str_val, sizeof(str_val)) == OS_SUCCESS) {
-        snprintf(user_password, sizeof(user_password), "%.*s", sizeof(user_password) - 1, str_val);
-        printf("password %s\n", user_password);
-    }  else {
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "invalid post");
-        return ESP_FAIL;
-    }
-    char *json_str = NULL;
-
-    size_t size = 0;
-
-    size = asprintf(&json_str, "{\"status\":\"200\", \"ssid\":\"%s\", \"if_hide_ssid\":\"%s\", \"auth_mode\":\"%s\", \"password\":\"%s\"}",
-
-                    user_ssid, user_hide_ssid, user_auth_mode, user_password);
-
-    esp_err_t ret = httpd_resp_set_status(req, HTTPD_200);
-
-    ESP_ERROR_CHECK(ret);
-
-    ret = httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-
-    ESP_ERROR_CHECK(ret);
-
-    ret = httpd_resp_send(req, json_str, size);
-
-    free(json_str);
-
-    ESP_ERROR_CHECK(ret); 
-#endif
-    ;
-    return ESP_OK;
-}
-
 /* handle any DNS requests from dns-server */
 static bool dns_query_proc(const char *name, ip_addr_t *addr)
 {
@@ -360,6 +154,52 @@ static bool dns_query_proc(const char *name, ip_addr_t *addr)
     return true;
 }
 
+static esp_err_t guest_post_handler(httpd_req_t *req)
+{
+    int total_len = req->content_len;
+    int cur_len = 0;
+    char *buf = ((rest_server_context_t *)(req->user_ctx))->scratch;
+    int received = 0;
+    if (total_len >= SCRATCH_BUFSIZE) {
+        /* Respond with 500 Internal Server Error */
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "content too long");
+        return ESP_FAIL;
+    }
+    while (cur_len < total_len) {
+            ESP_LOGW(TAG, "%d", __LINE__);
+
+
+        received = httpd_req_recv(req, buf + cur_len, total_len);//here is problem GG
+        
+        ESP_LOGW(TAG, "%d", __LINE__);
+        if (received <= 0) {
+            /* Respond with 500 Internal Server Error */
+            httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to post control value");
+            return ESP_FAIL;
+        }
+        cur_len += received;
+    }
+    buf[total_len] = '\0';
+
+    cJSON *root = cJSON_Parse(buf);
+    char* q1 = cJSON_GetObjectItem(root, "q1")->valuestring;
+    char* q2 = cJSON_GetObjectItem(root, "q2")->valuestring;
+    char* q3 = cJSON_GetObjectItem(root, "q3")->valuestring;
+    char* q4 = cJSON_GetObjectItem(root, "q4")->valuestring;
+    int q5 = cJSON_GetObjectItem(root, "q5")->valueint;
+    char* q5_value = cJSON_GetObjectItem(root, "q6")->valuestring;
+    int q6 = cJSON_GetObjectItem(root, "q6_value")->valueint;
+    char* q7 = cJSON_GetObjectItem(root, "q7")->valuestring;
+    char* q7_2 = cJSON_GetObjectItem(root, "q7_2")->valuestring;
+    int q8 = cJSON_GetObjectItem(root, "q8")->valueint;
+
+    ESP_LOGI(TAG, "Light control: red = %s, green = %s, blue = %s", q1, q2, q3);
+    cJSON_Delete(root);
+
+
+    httpd_resp_sendstr(req, "Post control value successfully");
+    return ESP_OK;
+}
 
 esp_err_t start_rest_server(const char *base_path)
 {
@@ -376,11 +216,11 @@ esp_err_t start_rest_server(const char *base_path)
     ESP_LOGI(TAG, "Starting HTTP Server");
     REST_CHECK(httpd_start(&server, &config) == ESP_OK, "Start server failed", err_start);
 
-    static const httpd_uri_t guest_post_url = {
+    httpd_uri_t guest_post_url = {
         .uri        = "/guest",
-        .method     = HTTP_POST,
+        .method     = HTTP_PUT,
         .handler    = guest_post_handler,
-        .user_ctx   = NULL,
+        .user_ctx   = rest_context
     };
 
     httpd_register_uri_handler(server, &guest_post_url);
@@ -393,7 +233,7 @@ esp_err_t start_rest_server(const char *base_path)
     };
     httpd_register_uri_handler(server, &common_get_uri);
 
-    dnserv_init(&ipaddr, 53, dns_query_proc);
+    dnserv_init(&ipaddr, 80, dns_query_proc);
 
     return ESP_OK;
 err_start:

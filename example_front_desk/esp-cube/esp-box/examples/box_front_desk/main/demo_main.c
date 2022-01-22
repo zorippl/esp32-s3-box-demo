@@ -51,8 +51,6 @@ void app_main(void)
     ESP_ERROR_CHECK(bsp_tp_init());
     ESP_ERROR_CHECK(lv_port_init());
 
-
-
     /* Start speech recognition task. I2S is initialized in task pinned to core 1 */
     ESP_ERROR_CHECK(app_audio_start());
     ESP_ERROR_CHECK(app_sr_start(false));
@@ -62,7 +60,7 @@ void app_main(void)
     //you can configure ssid and pw in app_network.h
     //ESP_ERROR_CHECK(app_network_start("ESP-Box"));
 
-    //start_sntp();
+    start_sntp();
     ESP_ERROR_CHECK(app_camrec_start());
     ESP_ERROR_CHECK(ui_main_start());
     lv_task_handler();

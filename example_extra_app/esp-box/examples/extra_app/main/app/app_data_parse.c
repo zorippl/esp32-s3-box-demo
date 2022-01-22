@@ -216,9 +216,11 @@ static void parse_control(cJSON *root_obj)
         if (led_state.v < 8) {
             led_state.v = 8;
         }
-        app_pwm_led_set_all_hsv(led_state.h, led_state.s, led_state.v);
+        //app_pwm_led_set_all_hsv(led_state.h, led_state.s, led_state.v);
+        app_led_set_all(led_state.h, led_state.s, led_state.v);
     } else {
-        app_pwm_led_set_all(0, 0, 0);
+        //app_pwm_led_set_all(0, 0, 0);
+        app_led_set_all(0, 0, 0);
     }
 
     ui_dev_ctrl_update_state();

@@ -1,0 +1,4 @@
+source "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader/Kconfig.projbuild"
+source "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_rom/Kconfig.projbuild"
+source "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esptool_py/Kconfig.projbuild"
+source "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/partition_table/Kconfig.projbuild"

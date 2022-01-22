@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "app_led.h": "c",
+        "lvgl.h": "c",
+        "i2s.h": "c",
+        "regex": "c",
+        "freertos.h": "c",
+        "*.ipp": "c",
+        "app_album.h": "c"
+    }
+}

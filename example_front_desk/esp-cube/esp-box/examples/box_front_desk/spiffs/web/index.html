@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐鑫科技访客登记 Espressif Visitor Registration</title>
+    <style>
+        * {
+            outline: none;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        html,body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .wrap {
+            width: 100%;
+            height: 100%;
+            background: #0095ff;
+        }
+        .content-wrap {
+            width: inherit;
+            height: inherit;
+            padding: 0 0 20px;
+            background: rgba(247,247,247,0.95);
+        }
+        .content {
+            width: inherit;
+            height: inherit;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+        .content .banner img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .main-wrap {
+            background: #fff;
+        }
+        .main {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .main .header {
+            line-height: 20px;
+            text-align: center;
+            width: 96%;
+            padding: 40px 2% 30px;
+        }
+        .main .header h1 {
+            font-size: 24px !important;
+            font-weight: bold;
+            color: #0095ff;
+            vertical-align: middle;
+            margin: 0;
+            padding: 15px 0;
+            line-height: 30px;
+        }
+        .main .header p {
+            color: #555555;
+            line-height: 24px;
+            text-align: left;
+            font-size: 16px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+            margin-left: 0;
+            margin-bottom: 0;
+            margin-top: 20px;
+        }
+        .item-wrap {
+            padding-bottom: 50px;
+            box-sizing: border-box;
+        }
+        .item {
+            border: 2px solid transparent;
+            padding: 4px;
+            clear: both;
+            margin: 2px auto 10px;
+            width: 96%;
+            height: auto;
+        }
+        .item.error {
+            border: 2px solid red;
+            border-radius: 4px;
+        }
+        .item > label {
+            font-size: 15px;
+            color: #444444;
+            font-weight: bold;
+            height: auto;
+            line-height: 20px;
+            position: relative;
+        }
+        .item > label span {
+            color: red;
+        }
+        .item .item-content {
+            padding-top: 5px;
+            padding-left: 22px;
+            font-size: 15px;
+            color: #333333;
+        }
+        .item .item-content > input,
+        .item .item-content ul.info input,
+        .item .item-content ul.radio-wrap input[type=text] {
+            line-height: 22px;
+            height: 22px;
+            width: 62%;
+            font-size: 14px;
+            border-radius: 4px;
+            border: solid 1px #cdcdcd;
+            padding: 4px 4px 4px 10px;
+            vertical-align: middle;
+            transition: border-color .2s linear;
+        }
+        .item .item-content > input:focus,
+        .item .item-content ul.info input:focus,
+        .item .item-content ul.radio-wrap input[type=text]:focus {
+            border-color: #0095ff;
+        }
+        .item .item-content ul li {
+            width: 99%;
+            display: inline-block;
+            vertical-align: top;
+            list-style-type: none;
+            line-height: 30px;
+        }
+        .item .item-content ul li input[type=radio] {
+            display: none;
+        }
+        .item .item-content ul li label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            line-height: 30px;
+        }
+        .item .item-content ul li label .radio {
+            position: relative;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            vertical-align: middle;
+            border: 1px solid #cdcdcd;
+            margin-right: 10px;
+            transition: all .2s linear;
+        }
+        .item .item-content ul li label .radio:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 76%;
+            height: 76%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #0095ff;
+            border-radius: 50%;
+            transition: all .2s linear;
+        }
+        .item .item-content ul li label span:last-child {
+            margin-top: 1px;
+        }
+        .item .item-content ul li label {
+            cursor: pointer;
+        }
+        .item .item-content ul.radio-wrap input[type=text] {
+            display: none;
+            width: 40%;
+            margin-left: 10px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background: transparent;
+            border-radius: 0;
+        }
+        .item .item-content ul li label:hover {
+            background: rgba(205, 205, 205, 0.4);
+        }
+        .item .item-content ul li > input[type=radio]:checked ~ label span.radio {
+            border-color: #0095ff;
+        }
+        .item .item-content ul li > input[type=radio]:checked ~ label span.radio:after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .item .item-content ul li > input[type=radio]:checked ~ label input[type=text] {
+            display: inline-block;
+        }
+        .item .desc {
+            margin-left: 19px;
+            font-weight: normal;
+            color: #999999;
+        }
+        .item .item-content ul.info li {
+            padding: 6px 0;
+        }
+        .item .item-content ul.info li label {
+            display: inline-block;
+            width: 100px;
+        }
+        .item .item-content ul.info li input {
+            width: 46%;
+        }
+        .btn-wrap {
+            text-align: center;
+            padding-bottom: 50px;
+        }
+        .btn {
+            width: 120px;
+            height: 32px;
+            background: #0095ff;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity .2s linear;
+        }
+        .btn:hover {
+            opacity: .8;
+        }
+        @media (max-width: 768px) {
+            .main .header {
+                padding: 16px 2% 30px;
+            }
+            .item .item-content > input,
+            .item .item-content ul.info input,
+            .item .item-content ul.radio-wrap input[type=text] {
+                width: 90%;
+            }
+            .item .item-content ul.radio-wrap input[type=text] {
+                width: 75%;
+            }
+            .item .item-content ul.info li input {
+                width: 60%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="content-wrap">
+        <div class="content">
+            <div class="banner">
+                <img src="banner.png">
+            </div>
+            <div class="main-wrap">
+                <div class="main">
+                    <div class="header">
+                        <h1>乐鑫科技访客登记 Espressif Visitor Registration</h1>
+                        <p>
+                            为了配合国家疫情防控政策，请您抽出几分钟时间完成如下访客信息采集。<br>
+                            In order to cooperate with the nationalpandemic prevention and control policy, please take a few minutes to complete the following visitor information collection.
+                        </p>
+                    </div>
+                    <div class="body">
+                        <div class="item-wrap">
+                            <div class="item">
+                                <label for="q1"><span>*</span>1. 您的姓名：</label>
+                                <div class="item-content">
+                                    <input type="text" name="q1" id="q1">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label for="q2"><span>*</span>2. 您的手机号码：</label>
+                                <div class="item-content">
+                                    <input type="text" name="q2" id="q2">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label for="q3"><span>*</span>3. 您的公司/单位名称：</label>
+                                <div class="item-content">
+                                    <input type="text" name="q3" id="q3">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label for="q4"><span>*</span>4. 请输入您来自的省份城市与地区：</label>
+                                <div class="item-content">
+                                    <input type="text" name="q4" id="q4">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label><span>*</span>5. 14天内是否经停其他国家和地区</label>
+                                <div class="item-content">
+                                    <ul id="q5_radio" class="radio-wrap">
+                                        <li>
+                                            <input type="radio" name="q5" id="q5" value="1">
+                                            <label for="q5"><span class="radio"></span><span class="text">是</span> <input name="q5_value" id="q5_value" type="text"></label>
+                                            <div class="desc">
+                                                如果“是”请在横线处填写经停国家
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="q5" id="q5_2" value="2">
+                                            <label for="q5_2"><span class="radio"></span><span>否</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label><span>*</span>6. 14天内是否途径国内中高风险地区</label>
+                                <div class="item-content">
+                                    <ul id="q6_radio" class="radio-wrap">
+                                        <li>
+                                            <input type="radio" name="q6" id="q6" value="1">
+                                            <label for="q6"><span class="radio"></span><span class="text">是</span> <input name="q6_value" id="q6_value" type="text"></label>
+                                            <div class="desc">
+                                                如果“是”请在横线处填写经停的城市
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="q6" id="q6_2" value="2">
+                                            <label for="q6_2"><span class="radio"></span><span>否</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label><span>*</span>7. 同行者信息</label>
+                                <div class="item-content">
+                                    <ul id="q7_value" class="info">
+                                        <li>
+                                            <label for="q7">姓名：</label>
+                                            <input type="text" name="q7" id="q7">
+                                        </li>
+                                        <li>
+                                            <label>联系方式：</label>
+                                            <input type="text" name="q7_2" id="q7_2">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <label><span>*</span>8. 是否有核酸检测报告？</label>
+                                <div class="item-content">
+                                    <ul id="q8_radio" class="radio-wrap">
+                                        <li>
+                                            <input type="radio" name="q8" id="q8" value="1">
+                                            <label for="q8"><span class="radio"></span><span>是</span></label>
+                                            <div class="desc">
+                                                如果“是”请给工作人员查看
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="q8" id="q8_2" value="2">
+                                            <label for="q8_2"><span class="radio"></span><span>否</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-wrap">
+                            <button onclick="saveData()" class="btn">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var flag = true;
+    var Ajax = {
+        get: function(url,callback){
+            // XMLHttpRequest对象用于在后台与服务器交换数据
+            var xhr=new XMLHttpRequest();
+            xhr.open('GET', url,true);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4){
+                    if(xhr.status==200 || xhr.status==304){
+                        console.log(xhr.responseText);
+                        callback(xhr.responseText);
+                    } else {
+                        console.log(xhr.responseText);
+                    }
+                }
+            }
+            xhr.send();
+        },
+        put: function(url, data, callback) {
+            var xhr=new XMLHttpRequest();
+            xhr.open('put', url,true);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4){
+                    if(xhr.status==200 || xhr.status==304){
+                        console.log(xhr.responseText);
+                        callback(xhr.responseText);
+                    } else {
+                        console.log(xhr.responseText);
+                    }
+                }
+            }
+            xhr.send(JSON.stringify(data));
+        },
+        post: function(url, data, callback){
+            var xhr=new XMLHttpRequest();
+            xhr.open('POST', url,true);
+            // 添加http头，发送信息至服务器时内容编码类型
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.onreadystatechange=function(){
+                if (xhr.readyState==4){
+                    if (xhr.status==200 || xhr.status==304){
+                        callback(xhr.responseText);
+                    }
+                }
+            }
+            xhr.send(data);
+        }
+    }
+    function saveData() {
+        flag = true;
+        var q1 = document.getElementById('q1').value;
+        var q2 = document.getElementById('q2').value;
+        var q3 = document.getElementById('q3').value;
+        var q4 = document.getElementById('q4').value;
+        var q5 = document.getElementById('q5').checked;
+        var q5_2 = document.getElementById('q5_2').checked;
+        var q5_value = document.getElementById('q5_value').value;
+        var q6 = document.getElementById('q6').checked;
+        var q6_2 = document.getElementById('q6_2').checked;
+        var q6_value = document.getElementById('q6_value').value;
+        var q7 = document.getElementById('q7').value;
+        var q7_2 = document.getElementById('q7_2').value;
+        var q8 = document.getElementById('q8').checked;
+        var q8_2 = document.getElementById('q8_2').checked;
+        var doms = document.querySelectorAll('.item');
+        doms.forEach(function(item) {
+            item.classList.remove('error')
+        })
+        verification(q1, 'q1');
+        verification(q2, 'q2');
+        verification(q3, 'q3');
+        verification(q4, 'q4');
+        verificationChecked(q5, q5_2, 'q5_radio');
+        verificationChecked(q6, q6_2, 'q6_radio');
+        verification(q7, 'q7_value');
+        verification(q7_2, 'q7_value');
+        verificationChecked(q8, q8_2, 'q8_radio');
+        if (flag) {
+            var data = {q1, q2, q3, q4, q5: q5 ? 1: 2, q5_value: q5_value, q6: q6 ? 1: 2, q6_value: q6_value, q7, q7_2, q8: q8 ? 1: 2 }
+            console.log(data)
+            Ajax.put(`${window.location.origin}/guest`, data, function(res) {
+                console.log(res);
+                alert('提交成功')
+            })
+        }
+    }
+    function verification (value, id) {
+        if (!value) {
+            document.getElementById(id).parentNode.parentNode.classList.add('error');
+            flag = false
+        }
+    }
+    function verificationChecked (value1, value2, id) {
+        if (!value1 && !value2) {
+            document.getElementById(id).parentNode.parentNode.classList.add('error');
+            flag = false
+        }
+    }
+</script>
+</body>
+</html>

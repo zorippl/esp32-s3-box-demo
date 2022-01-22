@@ -1,0 +1,10 @@
+dependencies:
+  lvgl/lvgl:
+    component_hash: d2dd83a2d95c5851e8b1399f8214a6cb1c5c69f07b3c83624e33fa6f9f2bcb0b
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 8.0.2
+manifest_hash: 489afd19d559b9da1ab7c6d352b1d5086bd66130ebbfb2afccfffc19e2f6f74f
+target: esp32s3
+version: 1.0.0

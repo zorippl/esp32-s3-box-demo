@@ -1,0 +1,21 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/home/zhangshengchao/myWorkspace/online/esp-adf-internal/examples/speech_recognition/wwe/build/bootloader",
+    "config_file":        "/home/zhangshengchao/myWorkspace/online/esp-adf-internal/examples/speech_recognition/wwe/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.4-beta1-284-gd83021a6e8-dirt",
+    "target":             "esp32s3",
+    "rev":                "",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32s3-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/efuse/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp32s3/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_common/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_hw_support/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_system/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/freertos/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/hal/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/log/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/newlib/Kconfig;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader/Kconfig.projbuild;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_rom/Kconfig.projbuild;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esptool_py/Kconfig.projbuild;/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32s3", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader_support", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/efuse", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp32s3", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_common", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_hw_support", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_rom", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esp_system", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/esptool_py", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/freertos", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/hal", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/log", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader/subproject/main", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/bootloader/subproject/components/micro-ecc", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/newlib", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/partition_table", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/soc", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/spi_flash", "/home/zhangshengchao/esp/esp-idf-online/esp-idf/components/xtensa", "" ]
+}

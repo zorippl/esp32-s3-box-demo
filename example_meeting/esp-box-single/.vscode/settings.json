@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "app_audio.h": "c",
+        "app_sr.h": "c",
+        "app_myespnow.h": "c",
+        "lvgl.h": "c",
+        "espnow.h": "c",
+        "strstream": "c"
+    }
+}

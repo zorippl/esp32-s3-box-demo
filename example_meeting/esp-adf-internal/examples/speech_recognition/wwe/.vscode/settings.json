@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "esp_sntp.h": "c",
+        "esp_system.h": "c",
+        "esp_event.h": "c",
+        "esp_attr.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

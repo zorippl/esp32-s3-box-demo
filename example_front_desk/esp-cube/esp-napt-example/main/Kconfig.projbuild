@@ -1,0 +1,35 @@
+menu "NAPT Example Configuration"
+
+    config STA_SSID
+        string "WiFi SSID"
+        default "router"
+        help
+            SSID (network name) for the example to connect to.
+
+    config STA_PASSWORD
+        string "STA Password"
+        default "12345678"
+        help
+            Password of the network the example to connect to.
+
+    config AP_SSID
+        string "AP SSID"
+        default "esp_repeater"
+        help
+            SSID (network name) for the example to connect to.
+
+    config AP_PASSWORD
+        string "AP Password"
+        default "12345678"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+
+    config MANUAL_DNS
+        bool "manually set dns address"
+        default y
+
+    config MANUAL_DNS_ADDR
+        string  "main dns address"
+        default "114.114.114.114"
+        depends on MANUAL_DNS
+endmenu

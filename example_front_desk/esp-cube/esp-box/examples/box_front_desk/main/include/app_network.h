@@ -23,8 +23,8 @@
 
 #include "esp_err.h"
 
-#define EXAMPLE_ESP_WIFI_SSID       "TP-LINK-2.4-zori"
-#define EXAMPLE_ESP_WIFI_PASS       "a18281132"
+#define EXAMPLE_ESP_WIFI_SSID       "304-Addax"
+#define EXAMPLE_ESP_WIFI_PASS       "espressif"
 #define EXAMPLE_ESP_WIFI_CHANNEL    1
 #define EXAMPLE_MAX_STA_CONN        2
 #define CONFIG_MANUAL_DNS 1

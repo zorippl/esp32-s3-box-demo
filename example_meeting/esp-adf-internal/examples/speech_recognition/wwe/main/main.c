@@ -226,7 +226,7 @@ static void voice_read_task(void *args)
         if (xQueueReceive(rec_q, &msg, delay) == pdTRUE) {
             switch (msg) {
                 case REC_START: {
-                        esp_audio_stop(player, TERMINATION_TYPE_NOW);
+                        //esp_audio_stop(player, TERMINATION_TYPE_NOW);
                         ESP_LOGW(TAG, "voice read begin");
                         delay = 0;
                         voice_reading = true;
@@ -297,6 +297,11 @@ static esp_err_t rec_engine_cb(audio_rec_evt_t type, void *user_data)
     if (AUDIO_REC_WAKEUP_START == type) {
         ESP_LOGI(TAG, "rec_engine_cb - REC_EVENT_WAKEUP_START");
         xEventGroupSetBits(sr_event_group_handle, SR_EVENT_WAKE_UP);
+        esp_audio_state_t st = {0};
+        esp_audio_state_get(player, &st);
+        if ((st.status == AUDIO_STATUS_RUNNING) || (st.status == AUDIO_STATUS_PAUSED) ) {
+            esp_audio_stop(player, TERMINATION_TYPE_NOW);
+        }
         esp_audio_sync_play(player, tone_uri[TONE_TYPE_DINGDONG], 0);
         if (voice_reading) {
             int msg = REC_CANCEL;
@@ -555,8 +560,8 @@ void app_main(void)
 
 
     periph_wifi_cfg_t wifi_cfg = {
-        .ssid = "TP-LINK-2.4-zori",
-        .password = "a18281132",
+        .ssid = "304-Addax",
+        .password = "espressif",
     };
     esp_periph_handle_t wifi_handle = periph_wifi_init(&wifi_cfg);
     esp_periph_start(set, wifi_handle);

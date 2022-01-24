@@ -1,6 +1,0 @@
---flash_mode dio --flash_freq 80m --flash_size 16MB
-0x0 bootloader/bootloader.bin
-0x10000 factory_demo.bin
-0x8000 partition_table/partition-table.bin
-0x6b0000 storage.bin
-0x290000 model.bin
